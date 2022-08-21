@@ -1,0 +1,53 @@
+{
+  "name": "es-run",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/build.js",
+  "scripts": {
+    "test": "node test.js",
+    "prebuild": "rimraf dist",
+    "build": "npm run prebuild && tsc",
+    "start": "node dist/main.js src --main test.js",
+    "lint": "eslint src/**/*.[jt]s"
+  },
+  "keywords": [
+    "esbuild",
+    "eslint",
+    "es-start",
+    "nodemon",
+    "typescript"
+  ],
+  "author": "tim117",
+  "license": "MIT",
+  "exports": {
+    ".": "./dist/build.js",
+    "./esbuild-plugin-start": "./dist/plugins/es-start.js",
+    "./esbuild-plugin-serve": "./dist/plugins/es-serve.js",
+    "./esbuild-plugin-eslint": "./dist/plugins/eslint.js"
+  },
+  "bin": {
+    "es-run": "./dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tim117/es-start.git"
+  },
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "commander": "^9.4.0",
+    "esbuild": "^0.15.2",
+    "eslint": "^8.22.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.4.5",
+    "@types/node": "^18.7.3",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "fastify": "^4.5.2",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "tsup": "^6.2.2",
+    "typescript": "^4.7.4"
+  },
+  "type": "module"
+}
