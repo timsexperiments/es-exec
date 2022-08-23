@@ -1,35 +1,50 @@
-import { CliResult, run } from './cli.js';
-import { start } from './start.js';
+import { resolve } from 'path';
+import { inspect } from 'util';
+import { CliResult, createEsRunOptions, run } from './cli.js';
+import { start } from './es-run.js';
 import { setEnv } from './utils/env.js';
-import { loadModule, readConfig } from './utils/file.js';
+import { loadModule } from './utils/file.js';
+import logger from './utils/logger.js';
 
 async function main() {
   const cliResult = run();
   // We want to start by overriding the
   setEnv(cliResult.env ?? {});
-  // The es-start configuration file in the current directory should be used as
-  // the base options.
-  const esStartConfig = readConfig<CliResult>('es-start');
   let configModule;
   if (cliResult.config) {
-    configModule = loadModule<CliResult>(cliResult.config);
+    configModule = await loadModule<CliResult>(
+      cliResult.config,
+      cliResult.verbose,
+    );
+    if (cliResult.verbose) {
+      if (configModule) {
+        logger.info(`Found configuration module at ${cliResult.config}.`);
+        console.log(inspect(configModule));
+      } else {
+        logger.warn(
+          `No es-start configuration found at ${resolve(cliResult.config)}.` +
+            'Check your config path.',
+        );
+      }
+    }
   }
-  // The cli result should override all of the other configurations. A specified
-  // configuration file is more important than the configuration file in the
-  // current working directory.
+  // The cli result should override the values in the specified configuration
+  // file.
   const options = {
-    ...esStartConfig,
     ...configModule,
     ...cliResult,
     // TODO: Determine if the expected behavior would be to override or to only
     // use the values specified int the cli.
     //
     // Combine the environment variables from the sepcified configurations.
-    env: { ...esStartConfig?.env, ...configModule?.env, ...cliResult.env },
+    env: { ...configModule?.env, ...cliResult.env },
   };
-  console.error(options);
+  if (cliResult.verbose) {
+    logger.info('The following options were found');
+    console.log(inspect(options));
+  }
   // Set process.env based on the combined env value.
   setEnv(options.env);
-  await start(options);
+  await start(createEsRunOptions(options));
 }
 main().catch((error) => console.error(error));

@@ -2,6 +2,13 @@ import { ChildProcess, execSync } from 'child_process';
 import { isWindows } from './env.js';
 import logger from './logger.js';
 
+/**
+ * Kills child process.
+ *
+ * @param child The child process to kill.
+ * @param verbose Whether to explain each action.
+ * @returns true if the process was successfully killed.
+ */
 export function killProcess(child: ChildProcess, verbose = false) {
   const processId = child.pid ?? Infinity;
   const successMessage = `Successfully shut down process "${processId}".`;

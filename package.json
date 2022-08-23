@@ -1,13 +1,12 @@
 {
   "name": "es-run",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
-  "main": "dist/build.js",
+  "main": "dist/main.js",
   "scripts": {
     "test": "node test.js",
-    "prebuild": "rimraf dist",
-    "build": "npm run prebuild && tsc",
-    "start": "node dist/main.js src --main test.js",
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "start": "node . src/main.ts -m test.js --esbuild-config esbuild.config.js --verbose",
     "lint": "eslint src/**/*.[jt]s"
   },
   "keywords": [
@@ -20,10 +19,10 @@
   "author": "tim117",
   "license": "MIT",
   "exports": {
-    ".": "./dist/build.js",
-    "./esbuild-plugin-start": "./dist/plugins/es-start.js",
-    "./esbuild-plugin-serve": "./dist/plugins/es-serve.js",
-    "./esbuild-plugin-eslint": "./dist/plugins/eslint.js"
+    ".": "./dist/index.js",
+    "./es-start": "./dist/plugins/es-start/index.js",
+    "./es-serve": "./dist/plugins/es-serve/index.js",
+    "./eslint": "./dist/plugins/eslint/index.js"
   },
   "bin": {
     "es-run": "./dist/main.js"
@@ -46,7 +45,9 @@
     "fastify": "^4.5.2",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
-    "tsup": "^6.2.2",
+    "rollup": "^2.78.1",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-esbuild": "^4.9.3",
     "typescript": "^4.7.4"
   },
   "type": "module"

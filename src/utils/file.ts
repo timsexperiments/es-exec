@@ -40,38 +40,69 @@ function includesExtension(path: string) {
  * @returns The package json relative to the directory of the running script.
  */
 export function getPackageJson() {
-  return require(resolve('./package.json'));
+  const contents = fs.readFileSync(resolve('./package.json'));
+  return JSON.parse(contents.toString('utf-8'));
 }
 
-export function loadModule<T>(path: string, warn = false): T | undefined {
+/**
+ * Loads a modules default export.
+ *
+ * @param path The path of the module.
+ * @param warn Whether to display warnings.
+ * @returns The default export of the module.
+ */
+export async function loadModule<T>(
+  path: string,
+  warn = false,
+): Promise<T | undefined> {
   const file = resolve(path);
   try {
-    return require(file);
+    return (await import(`file://${file}`)).default;
   } catch (e) {
     if (warn) {
-      logger.warn(e);
+      logger.error(e);
     }
-    return undefined;
   }
+  return undefined;
 }
 
+/**
+ * Checks whether a `path` is a directory.
+ *
+ * @param path The path to check.
+ * @returns true if the path is a directory.
+ */
 export function isDir(path: string) {
   return !includesExtension(path);
 }
 
+/**
+ * Recursively cleans out a directory.
+ *
+ * @param path Path of the directory to recursively delete all of the files in.
+ */
 export function cleanDir(path: string) {
   if (fs.existsSync(path)) fs.rmSync(path, { recursive: true });
 }
 
 const COMMON_CONFIG_EXTENSIONS = /\.(config\.js|json|.*rc|jsonrc)$/;
 
-export function readConfig<T>(
-  configType: 'es-start',
+/**
+ * Searches for and loads a config.
+ *
+ * @param configType The type of config to search for
+ * @param warn Whether to warn on errors.
+ * @param extensionRegex List of valid extensions to search for.
+ * @returns The default export of the config module.
+ */
+export async function readConfig<T>(
+  configType: 'es-run',
+  warn = false,
   extensionRegex = COMMON_CONFIG_EXTENSIONS,
-): T | undefined {
+): Promise<T | undefined> {
   const file = fs
     .readdirSync(resolve())
     .filter((file) => extensionRegex.test(file))
     .find((file) => file.includes(configType));
-  return loadModule<T>(file ?? '');
+  return await loadModule<T>(file ?? '', warn);
 }

@@ -6,6 +6,7 @@ function writeInColor(color: ChalkInstance) {
   };
 }
 
+/** Logging functions for log type disction. */
 export default {
   error: writeInColor(chalk.red),
   info: writeInColor(chalk.cyan),

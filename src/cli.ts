@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { BuildOptions } from 'esbuild';
+import { ESRunOptions } from './es-run';
 import { DEFAULT_OUT_DIR } from './utils/const.js';
 import { getAllFiles, getPackageJson } from './utils/file.js';
 import logger from './utils/logger.js';
@@ -20,6 +21,7 @@ export interface CliResult extends Omit<BuildOptions, 'watch'> {
   lint: boolean;
   lintFix: boolean;
   outDir: string;
+  singleLint: boolean;
   script: string;
   useExternal?: boolean;
   verbose: boolean;
@@ -52,7 +54,7 @@ export function run(): CliResult {
         'configuration file.',
     )
     .option('--lint-fix', 'Wether to fix lint errors.', false)
-    .option('--no-lint', 'Whether to lint the src files')
+    .option('--no-lint', 'Whether to lint the src files.')
     .option(
       '--esbuild-config [value]',
       'The path to the esbuild config relative to the invocation path.',
@@ -81,7 +83,11 @@ export function run(): CliResult {
         'https://esbuild.github.io/api/#bundle).',
       false,
     )
-    .option('--verbose', 'Verbose')
+    .option(
+      '--verbose',
+      'Logs everything that is happening. Will slow down the build ' +
+        'process. Good for debugging.',
+    )
     .option(
       '--define [value...]',
       'Replace global identifiers with constant expressions (see ' +
@@ -98,6 +104,14 @@ export function run(): CliResult {
       '--no-clean',
       'If set to false, the output directory will not empty before building.',
     )
+    .option(
+      '--useExternal',
+      'If set to true, all npm dependencies will be set as external.',
+    )
+    .option(
+      '--no-single-lint',
+      'If set to false each file will be linted separately.',
+    )
     .showHelpAfterError('(add --help for additional information)')
     .version(VERSION)
     .parse(process.argv);
@@ -105,11 +119,13 @@ export function run(): CliResult {
   const options = {
     ...program.opts<CliOptions>(),
   };
+  console.log(options.entryPoints);
   const entryPoints = findAllEntryPoints(
     program.args,
     options.extensions?.length ? new Set(options.extensions) : undefined,
   );
   options.entryPoints = entryPoints;
+  console.log(entryPoints);
   const main = findMain(options);
   return { ...options, env: toProcessEnv(options.env), main };
 }
@@ -154,35 +170,53 @@ function findMain(options: CliOptions) {
   });
 }
 
-export function createBuildOptions(options: CliResult): BuildOptions {
+/**
+ * Creates the es-run options out of the CLI result.
+ *
+ * @param result The CLI result to convert into es-run options.
+ * @returns The options to use to for the es-run.
+ */
+export function createEsRunOptions(result: CliResult): ESRunOptions {
   // Cast as 'BuildOptions & any' to be able to delete required fields from the
   // CliResult that do not overlap with build options.
   const buildOptions: BuildOptions & any = {
-    ...options,
+    ...result,
   };
   // ESBuild doesn't accept extra parameters so we need to delete all of the
   // non-overlapping fields.
   delete buildOptions.clean;
   delete buildOptions.env;
   delete buildOptions.extensions;
+  delete buildOptions.esbuildConfig;
   delete buildOptions.lint;
   delete buildOptions.lintFix;
   delete buildOptions.main;
   delete buildOptions.outDir;
+  delete buildOptions.singleLint;
   delete buildOptions.src;
   delete buildOptions.script;
   delete buildOptions.useExternal;
   delete buildOptions.watch;
+  delete buildOptions.verbose;
 
   const external = buildOptions.external ?? [];
   // When use external is set, add all package.json dependencies to the external
   // list.
-  if (options.useExternal) {
+  if (result.useExternal) {
     const pkg = getPackageJson();
     external.push(
       ...Object.keys(pkg?.dependencies ?? {}),
       ...Object.keys(pkg?.peerDependencies ?? {}),
     );
+    buildOptions.bundle = true;
+    console.log(external);
   }
-  return { ...buildOptions, external, outdir: options.outDir };
+  return {
+    ...result,
+    buildOptions: {
+      ...buildOptions,
+      external,
+      outdir: result.outDir,
+    },
+  };
 }

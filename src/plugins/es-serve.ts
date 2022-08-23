@@ -7,7 +7,7 @@ import { checkShouldContinue } from './shared.js';
 
 const PLUGIN_NAME = 'es-serve-plugin';
 
-export interface EsStartOptions {
+export interface EsServeOptions {
   /**
    * If main is not specified, the esbuild.BuildOptions.outfile should be used
    * instead.
@@ -25,7 +25,7 @@ export default function ({
   runOnError = false,
   stopOnWarning = false,
   verbose = false,
-}: EsStartOptions): Plugin {
+}: EsServeOptions): Plugin {
   return {
     name: PLUGIN_NAME,
     setup: async function (build) {
@@ -37,8 +37,6 @@ export default function ({
       if (main === 'outfile' && outfile) {
         main = resolve(outfile);
       }
-      console.log('main: ' + main);
-      console.log('outfile: ' + outfile);
       if (main === 'outfile')
         throw Error("No 'main' or 'outfile' was provided to esbuild.");
 

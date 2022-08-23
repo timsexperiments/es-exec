@@ -1,5 +1,7 @@
-import esbuild, { BuildOptions, Metafile } from 'esbuild';
-import { CliResult, createBuildOptions } from './cli.js';
+import esbuild, { Metafile } from 'esbuild';
+import { resolve } from 'path';
+import { inspect } from 'util';
+import { ESRunOptions } from './es-run.js';
 import esserve from './plugins/es-serve.js';
 import esstart from './plugins/es-start.js';
 import eslint from './plugins/eslint.js';
@@ -10,29 +12,47 @@ import logger from './utils/logger.js';
 /**
  * Runs the esbuild client with the eslint and es-start plugins.
  *
- * @param esbuildConfig The esbuild config file to use for the configuration.
- * @param options Esbuild options. Does not override options in the
- * esbuildConfig.
+ * @param options es-run options. The esbuild build options override options in
+ * the esbuildConfig.
  * @returns The metafile data.
  */
-export async function build(
-  options: CliResult,
-  esbuildConfig?: string,
-): Promise<Metafile> {
+export async function build(options: ESRunOptions): Promise<Metafile> {
   let esbuildOptions;
-  if (esbuildConfig) esbuildOptions = loadModule<BuildOptions>(esbuildConfig);
-  const cliBuildOptions = createBuildOptions(options);
+  if (options.esbuildConfig) {
+    esbuildOptions = await loadModule<esbuild.BuildOptions>(
+      options.esbuildConfig,
+      options.verbose,
+    );
+    if (options.verbose) {
+      if (esbuildOptions) {
+        logger.info(
+          `Found esbuild config found at "${resolve(options.esbuildConfig)}"`,
+          inspect(esbuildOptions),
+        );
+      } else {
+        logger.warn(
+          `No esbuild config found at ${resolve(options.esbuildConfig)}. ` +
+            'Check your esbuild config path',
+        );
+      }
+    }
+  }
   const shouldStart = options.script && options.script.length;
-  logger.warn('shouldStart: ' + shouldStart);
   const result = await esbuild.build({
     ...DEFAULT_BUILD_OPTIONS,
     ...esbuildOptions,
-    ...cliBuildOptions,
+    ...options.buildOptions,
     plugins: [
-      eslint({ fix: options.lintFix }),
+      eslint({
+        eslintOptions: {
+          fix: options.lintFix,
+          useEslintrc: true,
+        },
+        single: options.singleLint,
+      }),
       shouldStart
         ? esstart({
-            script: options.script,
+            script: options.script ?? '',
             env: options.env,
             verbose: options.verbose,
           })
@@ -50,7 +70,7 @@ export async function build(
   return result.metafile;
 }
 
-const DEFAULT_BUILD_OPTIONS: BuildOptions = {
+const DEFAULT_BUILD_OPTIONS: esbuild.BuildOptions = {
   outdir: DEFAULT_OUT_DIR,
   bundle: process.env.NODE_ENV === 'production',
   metafile: true,
