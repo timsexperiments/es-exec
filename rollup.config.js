@@ -16,7 +16,7 @@ export default [
     ],
   },
   {
-    input: `src/es-run.ts`,
+    input: `src/es-exec.ts`,
     plugins: [esbuild()],
     output: [
       {
@@ -27,7 +27,7 @@ export default [
     ],
   },
   {
-    input: `src/es-run.ts`,
+    input: `src/es-exec.ts`,
     plugins: [dts()],
     output: {
       file: `dist/index.d.ts`,

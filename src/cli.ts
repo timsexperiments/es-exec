@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { BuildOptions } from 'esbuild';
-import { ESRunOptions } from './es-run';
+import { ESRunOptions } from './es-exec.js';
 import { DEFAULT_OUT_DIR } from './utils/const.js';
 import { getAllFiles, getPackageJson } from './utils/file.js';
 import logger from './utils/logger.js';

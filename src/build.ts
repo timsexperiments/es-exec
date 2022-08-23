@@ -1,7 +1,7 @@
 import esbuild, { Metafile } from 'esbuild';
 import { resolve } from 'path';
 import { inspect } from 'util';
-import { ESRunOptions } from './es-run.js';
+import { ESRunOptions } from './es-exec.js';
 import esserve from './plugins/es-serve.js';
 import esstart from './plugins/es-start.js';
 import eslint from './plugins/eslint.js';
