@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { resolve } from 'path';
 import { inspect } from 'util';
 import { CliResult, createEsRunOptions, run } from './cli.js';

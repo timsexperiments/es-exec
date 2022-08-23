@@ -1,10 +1,12 @@
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
+import shebang from 'rollup-plugin-preserve-shebang';
 
 export default [
   {
+    banner: '#!/usr/bin/env node',
     input: `src/main.ts`,
-    plugins: [esbuild()],
+    plugins: [esbuild(), shebang()],
     output: [
       {
         file: `dist/main.js`,

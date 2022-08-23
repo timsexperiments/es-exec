@@ -15,6 +15,7 @@ specifiers:
   rollup: ^2.78.1
   rollup-plugin-dts: ^4.2.2
   rollup-plugin-esbuild: ^4.9.3
+  rollup-plugin-preserve-shebang: ^1.0.1
   typescript: ^4.7.4
 
 dependencies:
@@ -34,6 +35,7 @@ devDependencies:
   rollup: 2.78.1
   rollup-plugin-dts: 4.2.2_accrhai6qopda76wnqb3pkewpq
   rollup-plugin-esbuild: 4.9.3_fe35gewyzvlkaht6xvoag6lhii
+  rollup-plugin-preserve-shebang: 1.0.1
   typescript: 4.7.4
 
 packages:
@@ -1100,6 +1102,12 @@ packages:
       yallist: 4.0.0
     dev: true
 
+  /magic-string/0.25.9:
+    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
+    dependencies:
+      sourcemap-codec: 1.4.8
+    dev: true
+
   /magic-string/0.26.2:
     resolution: {integrity: sha512-NzzlXpclt5zAbmo6h6jNc8zl2gNRGHvmsZW4IvZhTC4W7k4OlLP+S5YLussa/r3ixNT66KOQfNORlXHSOy/X4A==}
     engines: {node: '>=12'}
@@ -1322,6 +1330,12 @@ packages:
       rollup: 2.78.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /rollup-plugin-preserve-shebang/1.0.1:
+    resolution: {integrity: sha512-gk7ExGBqvUinhgrvldKHkAKXXwRkWMXMZymNkrtn50uBgHITlhRjhnKmbNGwAIc4Bzgl3yLv7/8Fhi/XeHhFKg==}
+    dependencies:
+      magic-string: 0.25.9
     dev: true
 
   /rollup/2.78.1:
