@@ -1,0 +1,9 @@
+{
+  "composite": true,
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "ESNext"
+  },
+  "include": ["src"]
+}

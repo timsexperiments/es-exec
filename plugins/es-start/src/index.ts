@@ -1,9 +1,7 @@
+import { checkShouldContinue } from '@es-exec/plugins-shared';
+import { isWindows, killProcess, logger } from '@es-exec/utils';
 import { ChildProcess, spawn } from 'child_process';
 import type { Plugin } from 'esbuild';
-import { isWindows } from '../utils/env.js';
-import logger from '../utils/logger.js';
-import { killProcess } from '../utils/process.js';
-import { checkShouldContinue } from './shared.js';
 
 const WINDOWS_SHELL = process.env.comspec || 'cmd';
 
@@ -12,7 +10,7 @@ const shell = isWindows ? WINDOWS_SHELL : 'sh';
 
 const PLUGIN_NAME = 'es-start-plugin';
 
-export interface EsStartOptions {
+export interface ESStartOptions {
   child?: ChildProcess;
   env?: NodeJS.ProcessEnv;
   runOnError?: boolean;
@@ -28,7 +26,7 @@ export default function ({
   runOnError = false,
   stopOnWarning = false,
   verbose = false,
-}: EsStartOptions): Plugin {
+}: ESStartOptions): Plugin {
   return {
     name: PLUGIN_NAME,
     setup: async function (build) {

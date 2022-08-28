@@ -1,11 +1,9 @@
 #!/usr/bin/env node
+import start from '@es-exec/api';
+import { loadModule, logger, setEnv } from '@es-exec/utils';
 import { resolve } from 'path';
 import { inspect } from 'util';
 import { CliResult, createEsRunOptions, run } from './cli.js';
-import { start } from './es-exec.js';
-import { setEnv } from './utils/env.js';
-import { loadModule } from './utils/file.js';
-import logger from './utils/logger.js';
 
 async function main() {
   const cliResult = run();

@@ -1,11 +1,9 @@
+import { cleanDir, logger, readConfig } from '@es-exec/utils';
 import { BuildOptions } from 'esbuild';
 import { inspect } from 'util';
 import { build } from './build.js';
-import { CliResult } from './cli.js';
-import { cleanDir, readConfig } from './utils/file.js';
-import logger from './utils/logger.js';
 
-export interface ESRunOptions {
+export interface ESExecOptions {
   buildOptions: BuildOptions;
   clean: boolean;
   env?: NodeJS.ProcessEnv;
@@ -24,10 +22,13 @@ export interface ESRunOptions {
  *
  * @param options The options to use when configuring the es-run process.
  */
-export async function start(options: ESRunOptions) {
+export default async function (options: ESExecOptions) {
   // The es-run configuration file in the current directory should be used as
   // the base options. Any passed in options should override the es-run config.
-  const esRunConfig = await readConfig<CliResult>('es-run', options.verbose);
+  const esRunConfig = await readConfig<ESExecOptions>(
+    'es-exec',
+    options.verbose,
+  );
   if (esRunConfig) {
     if (options.verbose) {
       logger.info(
@@ -42,7 +43,6 @@ export async function start(options: ESRunOptions) {
       env: { ...esRunConfig?.env, ...options.env },
     };
   }
-  console.log(inspect(options));
   if (options.clean) cleanDir(options.outDir);
   await build(options);
 }

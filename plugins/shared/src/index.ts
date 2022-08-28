@@ -1,6 +1,6 @@
-import logger from '../utils/logger.js';
+import { logger } from '@es-exec/utils';
 
-interface CheckShouldContinueArgs {
+export interface CheckShouldContinueArgs {
   stopOnWarning: boolean;
   runOnError: boolean;
   verbose: boolean;

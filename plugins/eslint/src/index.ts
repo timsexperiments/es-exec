@@ -1,8 +1,8 @@
+import { logger } from '@es-exec/utils';
 import chalk from 'chalk';
 import { Plugin } from 'esbuild';
 import { ESLint } from 'eslint';
 import { join, resolve } from 'path';
-import logger from '../utils/logger.js';
 
 interface ESLintPluginOptions {
   single?: boolean;
@@ -77,7 +77,7 @@ export default function (
 
       /** Reset isDone for --watch flag */
       build.onEnd(async () => {
-        await lint([...lintDirs]);
+        if (options.single) await lint([...lintDirs]);
       });
 
       /**

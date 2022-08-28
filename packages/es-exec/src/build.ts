@@ -1,13 +1,11 @@
+import esserve from '@es-exec/esbuild-plugin-es-serve';
+import esstart from '@es-exec/esbuild-plugin-es-start';
+import eslint from '@es-exec/esbuild-plugin-eslint';
+import { DEFAULT_OUT_DIR, loadModule, logger } from '@es-exec/utils';
 import esbuild, { Metafile } from 'esbuild';
 import { resolve } from 'path';
 import { inspect } from 'util';
-import { ESRunOptions } from './es-exec.js';
-import esserve from './plugins/es-serve.js';
-import esstart from './plugins/es-start.js';
-import eslint from './plugins/eslint.js';
-import { DEFAULT_OUT_DIR } from './utils/const.js';
-import { loadModule } from './utils/file.js';
-import logger from './utils/logger.js';
+import { ESExecOptions } from './index.js';
 
 /**
  * Runs the esbuild client with the eslint and es-start plugins.
@@ -16,7 +14,7 @@ import logger from './utils/logger.js';
  * the esbuildConfig.
  * @returns The metafile data.
  */
-export async function build(options: ESRunOptions): Promise<Metafile> {
+export async function build(options: ESExecOptions): Promise<Metafile> {
   let esbuildOptions;
   if (options.esbuildConfig) {
     esbuildOptions = await loadModule<esbuild.BuildOptions>(

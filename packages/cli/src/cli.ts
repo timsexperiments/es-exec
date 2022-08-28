@@ -1,9 +1,12 @@
+import { ESExecOptions } from '@es-exec/api';
+import {
+  DEFAULT_OUT_DIR,
+  getAllFiles,
+  getPackageJson,
+  logger,
+} from '@es-exec/utils';
 import { Command } from 'commander';
 import { BuildOptions } from 'esbuild';
-import { ESRunOptions } from './es-exec.js';
-import { DEFAULT_OUT_DIR } from './utils/const.js';
-import { getAllFiles, getPackageJson } from './utils/file.js';
-import logger from './utils/logger.js';
 
 const CLI_NAME = 'ESBuild-Run';
 const VERSION = process.env.npm_package_version ?? '?';
@@ -14,7 +17,7 @@ const program = new Command().name(CLI_NAME);
 export interface CliResult extends Omit<BuildOptions, 'watch'> {
   clean: boolean;
   config?: string;
-  entryPoints: string[];
+  entryPoints?: string[];
   main?: string;
   env?: NodeJS.ProcessEnv;
   esbuildConfig?: string;
@@ -45,7 +48,7 @@ interface CliOptions extends Omit<CliResult, 'env'> {
 export function run(): CliResult {
   program
     .argument('[entryPoints...]', 'Command to start the program.')
-    .option('--extensions [value...]', 'Extensions to find in the watch path.')
+    .option('--extensions [value...]', 'Extensions to find in the src path.')
     .option('--no-watch', 'Whether to just build the file.')
     .option(
       '-c --config [value]',
@@ -76,12 +79,6 @@ export function run(): CliResult {
       'Environment variables to forward to the start command.',
       parseObject,
       {},
-    )
-    .option(
-      '--bundle',
-      'Whether to bundle the project (see ' +
-        'https://esbuild.github.io/api/#bundle).',
-      false,
     )
     .option(
       '--verbose',
@@ -119,13 +116,12 @@ export function run(): CliResult {
   const options = {
     ...program.opts<CliOptions>(),
   };
-  console.log(options.entryPoints);
+
   const entryPoints = findAllEntryPoints(
     program.args,
     options.extensions?.length ? new Set(options.extensions) : undefined,
   );
   options.entryPoints = entryPoints;
-  console.log(entryPoints);
   const main = findMain(options);
   return { ...options, env: toProcessEnv(options.env), main };
 }
@@ -165,7 +161,7 @@ function toProcessEnv(object: { [key: string]: string }) {
 function findMain(options: CliOptions) {
   if (options.main) return options.main;
   const mainRegex = /^(app|index|main|server)\.[cm]?[jt]sx?$/;
-  return options.entryPoints.find(function (entryPoint) {
+  return options.entryPoints?.find(function (entryPoint) {
     return mainRegex.test(entryPoint);
   });
 }
@@ -176,7 +172,7 @@ function findMain(options: CliOptions) {
  * @param result The CLI result to convert into es-run options.
  * @returns The options to use to for the es-run.
  */
-export function createEsRunOptions(result: CliResult): ESRunOptions {
+export function createEsRunOptions(result: CliResult): ESExecOptions {
   // Cast as 'BuildOptions & any' to be able to delete required fields from the
   // CliResult that do not overlap with build options.
   const buildOptions: BuildOptions & any = {

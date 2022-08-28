@@ -1,0 +1,8 @@
+{
+  "composite": true,
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
+  "include": ["src", "../es-exec/src/es-exec.ts"]
+}

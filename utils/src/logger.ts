@@ -1,6 +1,6 @@
-import chalk, { ChalkInstance } from 'chalk';
+import chalk, { Chalk } from 'chalk';
 
-function writeInColor(color: ChalkInstance) {
+function writeInColor(color: Chalk) {
   return function (...args: unknown[]) {
     console.log(color(args));
   };

@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import { extname, join, resolve } from 'path';
 import logger from './logger.js';
 
@@ -96,7 +96,7 @@ const COMMON_CONFIG_EXTENSIONS = /\.(config\.js|json|.*rc|jsonrc)$/;
  * @returns The default export of the config module.
  */
 export async function readConfig<T>(
-  configType: 'es-run',
+  configType: 'es-exec',
   warn = false,
   extensionRegex = COMMON_CONFIG_EXTENSIONS,
 ): Promise<T | undefined> {
