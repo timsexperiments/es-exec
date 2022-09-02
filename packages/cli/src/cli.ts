@@ -1,10 +1,5 @@
 import { ESExecOptions } from '@es-exec/api';
-import {
-  DEFAULT_OUT_DIR,
-  getAllFiles,
-  getPackageJson,
-  logger,
-} from '@es-exec/utils';
+import { DEFAULT_OUT_DIR, getAllFiles, logger } from '@es-exec/utils';
 import { Command } from 'commander';
 import { BuildOptions } from 'esbuild';
 
@@ -18,14 +13,14 @@ export interface CliResult extends Omit<BuildOptions, 'watch'> {
   clean: boolean;
   config?: string;
   entryPoints?: string[];
-  main?: string;
   env?: NodeJS.ProcessEnv;
   esbuildConfig?: string;
   lint: boolean;
   lintFix: boolean;
+  main?: string;
   outDir: string;
-  singleLint: boolean;
   script: string;
+  singleLint: boolean;
   useExternal?: boolean;
   verbose: boolean;
   watch: boolean;
@@ -84,13 +79,6 @@ export function run(): CliResult {
       '--verbose',
       'Logs everything that is happening. Will slow down the build ' +
         'process. Good for debugging.',
-    )
-    .option(
-      '--define [value...]',
-      'Replace global identifiers with constant expressions (see ' +
-        'https://esbuild.github.io/api/#define).',
-      parseObject,
-      {},
     )
     .option(
       '--out-dir [value]',
@@ -172,21 +160,28 @@ function findMain(options: CliOptions) {
  * @param result The CLI result to convert into es-run options.
  * @returns The options to use to for the es-run.
  */
-export function createEsRunOptions(result: CliResult): ESExecOptions {
+export function createEsRunOptions(
+  result: CliResult & ESExecOptions,
+): ESExecOptions {
   // Cast as 'BuildOptions & any' to be able to delete required fields from the
   // CliResult that do not overlap with build options.
   const buildOptions: BuildOptions & any = {
     ...result,
+    ...result.buildOptions,
   };
   // ESBuild doesn't accept extra parameters so we need to delete all of the
   // non-overlapping fields.
+  delete buildOptions.buildOptions;
   delete buildOptions.clean;
+  delete buildOptions.config;
   delete buildOptions.env;
-  delete buildOptions.extensions;
   delete buildOptions.esbuildConfig;
+  delete buildOptions.extensions;
+  delete buildOptions.external;
   delete buildOptions.lint;
   delete buildOptions.lintFix;
   delete buildOptions.main;
+  delete buildOptions.outdir;
   delete buildOptions.outDir;
   delete buildOptions.singleLint;
   delete buildOptions.src;
@@ -195,23 +190,10 @@ export function createEsRunOptions(result: CliResult): ESExecOptions {
   delete buildOptions.watch;
   delete buildOptions.verbose;
 
-  const external = buildOptions.external ?? [];
-  // When use external is set, add all package.json dependencies to the external
-  // list.
-  if (result.useExternal) {
-    const pkg = getPackageJson();
-    external.push(
-      ...Object.keys(pkg?.dependencies ?? {}),
-      ...Object.keys(pkg?.peerDependencies ?? {}),
-    );
-    buildOptions.bundle = true;
-    console.log(external);
-  }
   return {
     ...result,
     buildOptions: {
       ...buildOptions,
-      external,
       outdir: result.outDir,
     },
   };

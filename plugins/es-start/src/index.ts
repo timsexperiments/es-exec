@@ -32,13 +32,16 @@ export default function ({
     setup: async function (build) {
       build.onEnd(async function ({ errors, warnings }) {
         if (child) killProcess(child, verbose);
-        checkShouldContinue({
+        const shouldStop = !checkShouldContinue({
           errors,
           warnings,
           runOnError,
           stopOnWarning,
           verbose,
         });
+        if (shouldStop) {
+          return;
+        }
         if (verbose) logger.info(`Starting "${script}".`);
         child = start(script, env);
       });

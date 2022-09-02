@@ -1,12 +1,12 @@
 import { checkShouldContinue } from '@es-exec/plugins-shared';
 import { killProcess, logger } from '@es-exec/utils';
 import { ChildProcess, fork } from 'child_process';
-import { OutputFile, Plugin } from 'esbuild';
+import { Plugin } from 'esbuild';
 import { resolve } from 'path';
 
 const PLUGIN_NAME = 'es-serve-plugin';
 
-export interface EsServeOptions {
+export interface ESServeOptions {
   /**
    * If main is not specified, the esbuild.BuildOptions.outfile should be used
    * instead.
@@ -24,7 +24,7 @@ export default function ({
   runOnError = false,
   stopOnWarning = false,
   verbose = false,
-}: EsServeOptions): Plugin {
+}: ESServeOptions): Plugin {
   return {
     name: PLUGIN_NAME,
     setup: async function (build) {
@@ -37,9 +37,33 @@ export default function ({
         main = resolve(outfile);
       }
 
-      build.onEnd(async function ({ outputFiles, errors, warnings }) {
+      if (!main && !outfile) {
+        build.initialOptions.metafile = true;
+      }
+
+      build.onEnd(async function ({ errors, warnings, metafile }) {
+        if (child) {
+          killProcess(child, verbose);
+        }
+        const shouldStop = !checkShouldContinue({
+          errors,
+          warnings,
+          runOnError,
+          stopOnWarning,
+          verbose,
+        });
+        if (shouldStop) {
+          return;
+        }
         if (!main) {
-          main = determineMain(outputFiles);
+          main = determineMain(Object.keys(metafile?.outputs ?? {}));
+          if (main && verbose) {
+            logger.warn(
+              `Found main file [${main}]. If this is not the module that ` +
+                "should be run after the build please sepcify the 'main' " +
+                'module in the options.',
+            );
+          }
         }
         if (!main) {
           throw Error(
@@ -47,16 +71,6 @@ export default function ({
               'config.',
           );
         }
-        if (child) {
-          killProcess(child, verbose);
-        }
-        checkShouldContinue({
-          errors,
-          warnings,
-          runOnError,
-          stopOnWarning,
-          verbose,
-        });
         if (verbose) logger.info(`Starting module '${main}'`);
         startModule(main, env);
       });
@@ -64,20 +78,20 @@ export default function ({
   };
 }
 
-function determineMain(outfiles?: OutputFile[]) {
+function determineMain(outfiles: string[]) {
   const mainFile = /(bundle|index|main|server)\.[cm]?[js]x?$/;
   if (!outfiles) return undefined;
   if (outfiles.length === 1) {
-    return outfiles[0].path;
+    return outfiles[0];
   }
-  return outfiles
-    .map((outFile) => outFile.path)
-    .find((file) => mainFile.test(file));
+  return outfiles.map((outFile) => outFile).find((file) => mainFile.test(file));
 }
 
 function startModule(main: string, env?: NodeJS.ProcessEnv) {
-  logger.info(`> ${main}`);
   const child = fork(main, { env, stdio: 'inherit' })
+    .on('spawn', function () {
+      logger.info(`> ${main}`);
+    })
     .on('error', function (error) {
       logger.error(error);
     })

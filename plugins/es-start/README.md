@@ -19,10 +19,16 @@ yarn add @es-exec/esbuild-plugin-es-start
 # Usage
 
 ```JavaScript
-import esStart from '@es-exec/esbuild-plugin-es-start';
+import start from '@es-exec/esbuild-plugin-start';
+
+/** @type import('@es-exec/esbuild-plugin-start').ESLintPluginOptions */
+const options = {
+    ..., // Any other es start option.
+    script: 'sh ./run.sh', // Required. The script to start after the build completes.
+};
 
 export default {
-    ... // Other esbuild config options.
-    plugins: [esstart({ script: 'sh ./run.sh' })],
+    ..., // Other esbuild config options.
+    plugins: [start(options)],
 };
 ```

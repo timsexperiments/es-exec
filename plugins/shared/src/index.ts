@@ -22,7 +22,7 @@ export function checkShouldContinue({
           'preventing start up.',
       );
     }
-    return;
+    return false;
   }
   if (stopOnWarning && warnings.length) {
     if (verbose) {
@@ -32,6 +32,7 @@ export function checkShouldContinue({
           'remove the "stopOnWarning" flag.',
       );
     }
-    return;
+    return false;
   }
+  return true;
 }

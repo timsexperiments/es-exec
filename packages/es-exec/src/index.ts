@@ -4,15 +4,16 @@ import { inspect } from 'util';
 import { build } from './build.js';
 
 export interface ESExecOptions {
-  buildOptions: BuildOptions;
+  buildOptions?: BuildOptions;
   clean: boolean;
   env?: NodeJS.ProcessEnv;
   esbuildConfig?: string;
+  lint: boolean;
   lintFix: boolean;
   main?: string;
-  outDir: string;
-  singleLint: boolean;
   script?: string;
+  singleLint: boolean;
+  useExternal: boolean;
   verbose: boolean;
   watch: boolean;
 }
@@ -25,24 +26,33 @@ export interface ESExecOptions {
 export default async function (options: ESExecOptions) {
   // The es-run configuration file in the current directory should be used as
   // the base options. Any passed in options should override the es-run config.
-  const esRunConfig = await readConfig<ESExecOptions>(
+  const esExecConfig = await readConfig<ESExecOptions>(
     'es-exec',
     options.verbose,
   );
-  if (esRunConfig) {
+  if (esExecConfig) {
     if (options.verbose) {
       logger.info(
         'Found an es-run configuration file. Any unspecified options will be ' +
           'added.',
       );
-      console.log(inspect(esRunConfig));
+      console.log(inspect(esExecConfig));
     }
     options = {
-      ...esRunConfig,
       ...options,
-      env: { ...esRunConfig?.env, ...options.env },
+      ...esExecConfig,
+      env: { ...esExecConfig?.env, ...options.env },
     };
   }
-  if (options.clean) cleanDir(options.outDir);
+  if (options.clean) {
+    if (options?.buildOptions?.outdir) {
+      cleanDir(options?.buildOptions?.outdir);
+    } else {
+      logger.warn(
+        'No output directory was specified in `buildOptions. Nothing will be ' +
+          'cleaned.',
+      );
+    }
+  }
   await build(options);
 }

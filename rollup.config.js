@@ -5,7 +5,7 @@ import esbuild from 'rollup-plugin-esbuild';
 import fs from 'fs';
 import { inspect } from 'util';
 
-const configs = [
+export default [
   ...createConfigs({
     packageRoot: 'utils',
     entryFile: 'src/index.ts',
@@ -49,8 +49,6 @@ const configs = [
     types: false,
   }),
 ];
-console.log(inspect(configs));
-export default configs;
 
 /**
  * Creates rollup configurations based off of the {@see options}

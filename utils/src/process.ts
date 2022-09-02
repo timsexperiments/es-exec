@@ -33,6 +33,8 @@ export function killProcess(child: ChildProcess, verbose = false) {
           );
         }
         return true;
+      } else if (verbose) {
+        logger.error((e as Error).message);
       }
     }
     if (verbose) {

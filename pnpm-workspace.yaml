@@ -1,4 +1,5 @@
 workspaces:
   - plugins/*
   - packages/*
+  - examples
   - utils

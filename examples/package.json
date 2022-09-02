@@ -1,0 +1,31 @@
+{
+  "name": "@es-exec/examples",
+  "description": "@es-exec package example usage.",
+  "author": "tim177",
+  "scripts": {
+    "demo:es-exec": "es-exec -c es-exec.configuration.js --verbose",
+    "demo:es-exec-api": "node es-exec.api.js",
+    "demo:es-exec-api:production": "node es-exec.api.js --production",
+    "demo:es-serve": "es-exec src/server.ts --no-lint",
+    "demo:es-start": "es-exec src/server.ts --no-lint --verbose --script \"echo Hello, world! Change the server.ts file and I will run again...\"",
+    "demo:esbuild-plugin-eslint": "node esbuild-eslint.js",
+    "demo:esbuild-plugin-eslint:single": "node esbuild-eslint.js --single",
+    "demo:esbuild-plugin-serve": "node esbuild-serve.js",
+    "demo:esbuild-plugin-start": "node esbuild-start.js",
+    "demo:start": "node out/es-start.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.5.3"
+  },
+  "devDependencies": {
+    "@es-exec/api": "workspace:^0.0.1",
+    "@es-exec/cli": "workspace:^0.0.1",
+    "@es-exec/esbuild-plugin-eslint": "workspace:^0.0.1",
+    "@es-exec/esbuild-plugin-serve": "workspace:^0.0.1",
+    "@es-exec/esbuild-plugin-start": "workspace:^0.0.1",
+    "esbuild": "^0.15.5",
+    "typescript": "^4.8.2"
+  },
+  "type": "module"
+}

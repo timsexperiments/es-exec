@@ -13,6 +13,8 @@ const PLUGIN_NAME = 'eslint';
 
 const LINT_FILTER = /\.([jt]sx?|json|cjs|.*rc)?$/;
 
+const NODE_MODULES_REGEX = /node_modules/;
+
 /**
  * Lints the files according to the esling configuration file and outputs the
  * results to the console.
@@ -56,7 +58,7 @@ export default function (
           const lintDir = resolve(resolveDir, path, '..');
           // No need to lint node_modules because written code shouldn't go
           // there.
-          if (!lintDir.includes('node_modules')) {
+          if (!NODE_MODULES_REGEX.test(path)) {
             // TODO: Implement support for other extensions.
             lintDirs.add(join(lintDir, '**', '*.[jt]s'));
           }
@@ -70,6 +72,7 @@ export default function (
         },
         async function ({ path }) {
           if (options.single) return;
+          if (NODE_MODULES_REGEX.test(path)) return;
           await lint([path]);
           return { pluginName: PLUGIN_NAME };
         },

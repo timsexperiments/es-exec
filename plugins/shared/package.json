@@ -5,6 +5,7 @@
   "author": "tim117",
   "license": "MIT",
   "repository": "tim117/es-exec",
+  "homepage": "https://github.com/tim117/es-exec/tree/main/plugins/shared",
   "module": "dist/index.mjs",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",

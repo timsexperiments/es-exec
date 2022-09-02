@@ -4,7 +4,18 @@
   "description": "An esbuild plugin to run a script after building a package.",
   "author": "tim117",
   "license": "MIT",
+  "keywords": [
+    "esbuild",
+    "eslint",
+    "es-start",
+    "es-serve",
+    "es-exec",
+    "es-run",
+    "nodemon",
+    "typescript"
+  ],
   "repository": "tim117/es-exec",
+  "homepage": "https://github.com/tim117/es-exec/tree/main/packages/es-cli",
   "module": "dist/main.mjs",
   "main": "dist/main.cjs",
   "exports": {

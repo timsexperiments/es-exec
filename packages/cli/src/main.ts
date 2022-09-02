@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import start from '@es-exec/api';
+import start, { ESExecOptions } from '@es-exec/api';
 import { loadModule, logger, setEnv } from '@es-exec/utils';
 import { resolve } from 'path';
 import { inspect } from 'util';
@@ -11,7 +11,7 @@ async function main() {
   setEnv(cliResult.env ?? {});
   let configModule;
   if (cliResult.config) {
-    configModule = await loadModule<CliResult>(
+    configModule = await loadModule<ESExecOptions>(
       cliResult.config,
       cliResult.verbose,
     );
@@ -29,21 +29,21 @@ async function main() {
   }
   // The cli result should override the values in the specified configuration
   // file.
-  const options = {
-    ...configModule,
+  const options: CliResult & ESExecOptions = {
     ...cliResult,
+    ...configModule,
     // TODO: Determine if the expected behavior would be to override or to only
     // use the values specified int the cli.
     //
     // Combine the environment variables from the sepcified configurations.
-    env: { ...configModule?.env, ...cliResult.env },
+    env: { ...configModule?.env, ...cliResult.env } as NodeJS.ProcessEnv,
   };
   if (cliResult.verbose) {
-    logger.info('The following options were found');
+    logger.info('The following options were found: ');
     console.log(inspect(options));
   }
   // Set process.env based on the combined env value.
-  setEnv(options.env);
+  setEnv(options.env ?? {});
   await start(createEsRunOptions(options));
 }
 main().catch((error) => console.error(error));

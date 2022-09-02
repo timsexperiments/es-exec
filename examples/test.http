@@ -1,0 +1,20 @@
+### Authorized Request on PORT 4041.
+GET http://localhost:4041 HTTP/1.1
+Authorization: ''
+
+### Unauthorized Request on PORT 4041.
+GET http://localhost:4041 HTTP/1.1
+
+### Authorized Request on PORT 4040.
+GET http://localhost:4040 HTTP/1.1
+Authorization: ''
+
+### Unauthorized Request on PORT 4040.
+GET http://localhost:4040 HTTP/1.1
+
+### Authorized Request on PORT 4000.
+GET http://localhost:4040 HTTP/1.1
+Authorization: ''
+
+### Unauthorized Request on PORT 4000.
+GET http://localhost:4040 HTTP/1.1
