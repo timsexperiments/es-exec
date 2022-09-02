@@ -1,6 +1,6 @@
 {
   "name": "@es-exec/utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An esbuild plugin to run a script after building a package.",
   "author": "tim117",
   "license": "MIT",

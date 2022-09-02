@@ -1,6 +1,9 @@
 {
   "name": "@es-exec/examples",
   "description": "@es-exec package example usage.",
+  "version": "0.0.0",
+  "repository": "tim117/es-exec",
+  "homepage": "https://github.com/tim117/es-exec/tree/main/examples",
   "author": "tim177",
   "scripts": {
     "demo:es-exec": "es-exec -c es-exec.configuration.js --verbose",
