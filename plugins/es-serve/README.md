@@ -7,13 +7,13 @@ An esbuild plugin for running a module after it is build with esbuild. This proj
 npm
 
 ```sh
-npm install @es-exec/esbuild-plugin-es-serve
+npm install --save-dev @es-exec/esbuild-plugin-serve
 ```
 
 yarn
 
 ```sh
-yarn add @es-exec/esbuild-plugin-es-serve
+yarn add --dev @es-exec/esbuild-plugin-serve
 ```
 
 # Usage
