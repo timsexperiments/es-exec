@@ -7,13 +7,13 @@ A plugin for running a script on esbuild end (kind of like nodemon).
 npm
 
 ```sh
-npm install @es-exec/esbuild-plugin-es-start
+npm install --save-dev @es-exec/esbuild-plugin-start
 ```
 
 yarn
 
 ```sh
-yarn add @es-exec/esbuild-plugin-es-start
+yarn add --dev @es-exec/esbuild-plugin-start
 ```
 
 # Usage

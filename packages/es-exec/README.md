@@ -9,13 +9,13 @@ An api that builds and runs a program.
 npm
 
 ```sh
-npm install @es-exec/api
+npm install --save-dev @es-exec/api
 ```
 
 yarn
 
 ```sh
-yarn add @es-exec/api
+yarn add --dev @es-exec/api
 ```
 
 # Usage
