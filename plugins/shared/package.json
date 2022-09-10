@@ -1,6 +1,6 @@
 {
   "name": "@es-exec/plugins-shared",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An esbuild plugin to run a script after building a package.",
   "author": "tim117",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "lint": "eslint --ext .ts,.tsx ./src"
   },
   "dependencies": {
-    "@es-exec/utils": "workspace:^0.0.1"
+    "@es-exec/utils": "workspace:^0.0.3"
   },
   "devDependencies": {
     "eslint": "^8.22.0"
