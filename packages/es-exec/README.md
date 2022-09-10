@@ -1,6 +1,6 @@
 <!-- When editing options table, best to turn off wordwrap (option + z on mac, alt + z on windows and linux in vs code). -->
 
-# ES Start
+# ES Exec Api
 
 An api that builds and runs a program.
 

@@ -4,6 +4,7 @@
   "description": "A project for running programs after esbuild.",
   "scripts": {
     "build": "rollup --c rollup.config.js",
+    "lint": "eslint",
     "format": "prettier -uw **/*",
     "format:check": "prettier -cu **/*"
   },
