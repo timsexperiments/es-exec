@@ -59,25 +59,31 @@ importers:
 
   packages/cli:
     specifiers:
-      '@es-exec/api': workspace:^0.0.1
-      '@es-exec/utils': workspace:^0.0.1
+      '@es-exec/api': workspace:^0.0.4
+      '@es-exec/utils': workspace:^0.0.4
+      '@types/node': ^18.7.13
       commander: ^9.4.0
       eslint: ^8.22.0
+      typescript: ^4.8.2
     dependencies:
       '@es-exec/api': link:../es-exec
       '@es-exec/utils': link:../../utils
       commander: 9.4.0
     devDependencies:
+      '@types/node': 18.7.13
       eslint: 8.22.0
+      typescript: 4.8.2
 
   packages/es-exec:
     specifiers:
-      '@es-exec/esbuild-plugin-eslint': workspace:^0.0.1
-      '@es-exec/esbuild-plugin-serve': workspace:^0.0.1
-      '@es-exec/esbuild-plugin-start': workspace:^0.0.1
-      '@es-exec/utils': workspace:^0.0.1
+      '@es-exec/esbuild-plugin-eslint': workspace:^0.0.4
+      '@es-exec/esbuild-plugin-serve': workspace:^0.0.4
+      '@es-exec/esbuild-plugin-start': workspace:^0.0.4
+      '@es-exec/utils': workspace:^0.0.4
+      '@types/node': ^18.7.13
       esbuild: ^0.15.2
       eslint: ^8.22.0
+      typescript: ^4.8.2
     dependencies:
       '@es-exec/esbuild-plugin-eslint': link:../../plugins/eslint
       '@es-exec/esbuild-plugin-serve': link:../../plugins/es-serve
@@ -85,66 +91,86 @@ importers:
       '@es-exec/utils': link:../../utils
       esbuild: 0.15.2
     devDependencies:
+      '@types/node': 18.7.13
       eslint: 8.22.0
+      typescript: 4.8.2
 
   plugins/es-serve:
     specifiers:
-      '@es-exec/plugins-shared': workspace:^0.0.1
-      '@es-exec/utils': workspace:^0.0.1
+      '@es-exec/plugins-shared': workspace:^0.0.4
+      '@es-exec/utils': workspace:^0.0.4
+      '@types/node': ^18.7.13
       esbuild: ^0.15.2
       eslint: ^8.22.0
+      typescript: ^4.8.2
     dependencies:
       '@es-exec/plugins-shared': link:../shared
       '@es-exec/utils': link:../../utils
     devDependencies:
+      '@types/node': 18.7.13
       esbuild: 0.15.2
       eslint: 8.22.0
+      typescript: 4.8.2
 
   plugins/es-start:
     specifiers:
-      '@es-exec/plugins-shared': workspace:^0.0.1
-      '@es-exec/utils': workspace:^0.0.1
+      '@es-exec/plugins-shared': workspace:^0.0.4
+      '@es-exec/utils': workspace:^0.0.4
+      '@types/node': ^18.7.13
       esbuild: ^0.15.2
       eslint: ^8.22.0
+      typescript: ^4.8.2
     dependencies:
       '@es-exec/plugins-shared': link:../shared
       '@es-exec/utils': link:../../utils
     devDependencies:
+      '@types/node': 18.7.13
       esbuild: 0.15.2
       eslint: 8.22.0
+      typescript: 4.8.2
 
   plugins/eslint:
     specifiers:
-      '@es-exec/utils': workspace:^0.0.1
+      '@es-exec/utils': workspace:^0.0.4
+      '@types/node': ^18.7.13
       chalk: 4.1.2
       esbuild: ^0.15.2
       eslint: ^8.22.0
+      typescript: ^4.8.2
     dependencies:
       '@es-exec/utils': link:../../utils
       chalk: 4.1.2
       eslint: 8.22.0
     devDependencies:
+      '@types/node': 18.7.13
       esbuild: 0.15.2
+      typescript: 4.8.2
 
   plugins/shared:
     specifiers:
-      '@es-exec/utils': workspace:^0.0.1
+      '@es-exec/utils': workspace:^0.0.4
+      '@types/node': ^18.7.13
       eslint: ^8.22.0
+      typescript: ^4.8.2
     dependencies:
       '@es-exec/utils': link:../../utils
     devDependencies:
+      '@types/node': 18.7.13
       eslint: 8.22.0
+      typescript: 4.8.2
 
   utils:
     specifiers:
-      '@es-exec/utils': workspace:^0.0.1
+      '@types/node': ^18.7.13
       chalk: 4.1.2
       eslint: ^8.22.0
+      typescript: ^4.8.2
     dependencies:
-      '@es-exec/utils': 'link:'
       chalk: 4.1.2
     devDependencies:
+      '@types/node': 18.7.13
       eslint: 8.22.0
+      typescript: 4.8.2
 
 packages:
 

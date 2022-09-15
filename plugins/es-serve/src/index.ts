@@ -24,7 +24,7 @@ export default function ({
   runOnError = false,
   stopOnWarning = false,
   verbose = false,
-}: ESServeOptions): Plugin {
+}: ESServeOptions = {}): Plugin {
   return {
     name: PLUGIN_NAME,
     setup: async function (build) {
@@ -72,7 +72,7 @@ export default function ({
           );
         }
         if (verbose) logger.info(`Starting module '${main}'`);
-        startModule(main, env);
+        child = startModule(main, env);
       });
     },
   };

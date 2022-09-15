@@ -1,6 +1,6 @@
 {
   "name": "@es-exec/cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An esbuild plugin to run a script after building a package.",
   "author": "tim117",
   "license": "MIT",
@@ -32,12 +32,14 @@
     "lint": "eslint --ext .ts,.tsx ./src"
   },
   "dependencies": {
-    "@es-exec/api": "workspace:^0.0.3",
-    "@es-exec/utils": "workspace:^0.0.3",
+    "@es-exec/api": "workspace:^0.0.4",
+    "@es-exec/utils": "workspace:^0.0.4",
     "commander": "^9.4.0"
   },
   "devDependencies": {
-    "eslint": "^8.22.0"
+    "@types/node": "^18.7.13",
+    "eslint": "^8.22.0",
+    "typescript": "^4.8.2"
   },
   "type": "module"
 }
