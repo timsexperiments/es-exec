@@ -6,11 +6,11 @@ A project to help you build and run your apps.
 
 This project consists of 5 different projects.
 
-- [`@es-exec/cli`](https://github.com/tim117/es-exec/tree/main/packages/es-cli)
+- [`@es-exec/cli`](https://github.com/tim117/es-exec/tree/main/packages/cli)
 - [`@es-exec/api`](https://github.com/tim117/es-exec/tree/main/packages/es-exec)
-- [@es-exec/esbuild-plugin-eslint](https://github.com/tim117/es-exec/tree/main/plugins/eslint)
-- [@es-exec/esbuild-plugin-serve](https://github.com/tim117/es-exec/tree/main/plugins/es-serve)
-- [@es-exec/esbuild-plugin-start](https://github.com/tim117/es-exec/tree/main/plugins/es-start)
+- [`@es-exec/esbuild-plugin-eslint`](https://github.com/tim117/es-exec/tree/main/plugins/eslint)
+- [`@es-exec/esbuild-plugin-serve`](https://github.com/tim117/es-exec/tree/main/plugins/es-serve)
+- [`@es-exec/esbuild-plugin-start`](https://github.com/tim117/es-exec/tree/main/plugins/es-start)
 
 ## @es-exec/cli
 
