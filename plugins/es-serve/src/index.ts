@@ -13,6 +13,7 @@ export interface ESServeOptions {
    */
   main?: string;
   env?: NodeJS.ProcessEnv;
+  execArgv?: string[];
   runOnError?: boolean;
   stopOnWarning?: boolean;
   verbose?: boolean;
@@ -21,6 +22,7 @@ export interface ESServeOptions {
 export default function ({
   main,
   env,
+  execArgv,
   runOnError = false,
   stopOnWarning = false,
   verbose = false,
@@ -72,7 +74,7 @@ export default function ({
           );
         }
         if (verbose) logger.info(`Starting module '${main}'`);
-        child = startModule(main, env);
+        child = startModule(main, env, execArgv);
       });
     },
   };
@@ -87,8 +89,8 @@ function determineMain(outfiles: string[]) {
   return outfiles.map((outFile) => outFile).find((file) => mainFile.test(file));
 }
 
-function startModule(main: string, env?: NodeJS.ProcessEnv) {
-  const child = fork(main, { env, stdio: 'inherit' })
+function startModule(main: string, env?: NodeJS.ProcessEnv, execArgv?:string[]) {
+  const child = fork(main, { env, execArgv, stdio: 'inherit' })
     .on('spawn', function () {
       logger.info(`> ${main}`);
     })
