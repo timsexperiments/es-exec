@@ -22,11 +22,11 @@
     "fastify": "^4.5.3"
   },
   "devDependencies": {
-    "@es-exec/api": "workspace:^0.0.1",
-    "@es-exec/cli": "workspace:^0.0.1",
-    "@es-exec/esbuild-plugin-eslint": "workspace:^0.0.1",
-    "@es-exec/esbuild-plugin-serve": "workspace:^0.0.1",
-    "@es-exec/esbuild-plugin-start": "workspace:^0.0.1",
+    "@es-exec/api": "workspace.*",
+    "@es-exec/cli": "workspace.*",
+    "@es-exec/esbuild-plugin-eslint": "workspace.*",
+    "@es-exec/esbuild-plugin-serve": "workspace.*",
+    "@es-exec/esbuild-plugin-start": "workspace.*",
     "esbuild": "^0.15.5",
     "typescript": "^4.8.2"
   },

@@ -5,8 +5,8 @@
   "scripts": {
     "build": "rollup --c rollup.config.js",
     "lint": "eslint",
-    "format": "prettier -uw **/*",
-    "format:check": "prettier -cu **/*"
+    "format": "prettier -uw **/*.[jt]s",
+    "format:check": "prettier -cu **/*.[jt]s"
   },
   "keywords": [
     "esbuild",

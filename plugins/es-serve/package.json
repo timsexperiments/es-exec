@@ -30,8 +30,8 @@
     "lint": "eslint --ext .ts,.tsx ./src"
   },
   "dependencies": {
-    "@es-exec/plugins-shared": "workspace:^0.0.4",
-    "@es-exec/utils": "workspace:^0.0.4"
+    "@es-exec/plugins-shared": "workspace.*",
+    "@es-exec/utils": "workspace.*"
   },
   "devDependencies": {
     "@types/node": "^18.7.13",
