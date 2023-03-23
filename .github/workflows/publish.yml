@@ -15,6 +15,9 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: Update versions
         run: |
           changed_packages=$(git diff HEAD HEAD~ --name-only --diff-filter=ACM | grep -E "(packages|src|tests)/" | xargs dirname | sort -u)
