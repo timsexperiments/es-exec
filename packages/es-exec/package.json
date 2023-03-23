@@ -2,7 +2,7 @@
   "name": "@es-exec/api",
   "version": "0.0.4",
   "description": "An esbuild plugin to run a script after building a package.",
-  "author": "tim117",
+  "author": "tim",
   "license": "MIT",
   "keywords": [
     "esbuild",
