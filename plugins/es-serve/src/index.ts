@@ -89,7 +89,11 @@ function determineMain(outfiles: string[]) {
   return outfiles.map((outFile) => outFile).find((file) => mainFile.test(file));
 }
 
-function startModule(main: string, env?: NodeJS.ProcessEnv, execArgv?:string[]) {
+function startModule(
+  main: string,
+  env?: NodeJS.ProcessEnv,
+  execArgv?: string[],
+) {
   const child = fork(main, { env, execArgv, stdio: 'inherit' })
     .on('spawn', function () {
       logger.info(`> ${main}`);

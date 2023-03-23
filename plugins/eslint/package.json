@@ -30,13 +30,13 @@
     "lint": "eslint --ext .ts,.tsx ./src"
   },
   "dependencies": {
-    "@es-exec/utils": "workspace:^0.0.4",
+    "@es-exec/utils": "workspace:workspace.*",
     "chalk": "4.1.2",
-    "eslint": "^8.22.0"
+    "eslint": "^8.36.0"
   },
   "devDependencies": {
-    "@types/node": "^18.7.13",
-    "esbuild": "^0.15.2",
-    "typescript": "^4.8.2"
+    "@types/node": "^18.15.5",
+    "esbuild": "^0.15.18",
+    "typescript": "^4.9.5"
   }
 }

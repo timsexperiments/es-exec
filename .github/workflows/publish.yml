@@ -1,0 +1,42 @@
+name: Publish to NPM
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  increment-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Update versions
+        run: |
+          changed_packages=$(git diff HEAD HEAD~ --name-only --diff-filter=ACM | grep -E "(packages|src|tests)/" | xargs dirname | sort -u)
+          for pkg in $changed_packages
+          do
+            current_version=$(pnpm pkg get version --package-dir $pkg)
+            new_version=$(node -pe "require('semver').inc('$current_version', 'patch')")
+            echo "Bumping version for $pkg from $current_version to $new_version"
+            pnpm pkg update --package-dir $pkg --version $new_version
+          done
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Bump package versions"
+          git push
+
+      - name: Publish packages
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm publish -r --access public

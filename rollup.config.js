@@ -1,9 +1,8 @@
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 import dts from 'rollup-plugin-dts';
 import shebang from 'rollup-plugin-preserve-shebang';
 import esbuild from 'rollup-plugin-esbuild';
 import fs from 'fs';
-import { inspect } from 'util';
 
 export default [
   ...createConfigs({
