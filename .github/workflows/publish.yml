@@ -18,28 +18,67 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
       - name: Update versions
         run: |
-          changed_packages=$(git diff HEAD HEAD~ --name-only --diff-filter=ACM | grep -E "(packages|src|tests)/" | xargs dirname | sort -u)
-          for pkg in $changed_packages
-          do
-            current_version=$(pnpm pkg get version --package-dir $pkg)
-            new_version=$(node -pe "require('semver').inc('$current_version', 'patch')")
-            echo "Bumping version for $pkg from $current_version to $new_version"
-            pnpm pkg update --package-dir $pkg --version $new_version
-          done
+          node=$(which node)
+          mv $node $node.exe
+          node=$(echo $node.exe)
+          git fetch origin --prune
+          changed_packages=$(git diff --name-only origin/version...origin/main --diff-filter=ACM | grep -E "(packages|plugins|utils)/" | sort -u)
+          if [ -z "$changed_packages" ]; then
+            echo "No changes found in packages, skipping update"
+            exit 0
+          fi
+          changed_packages=$(echo "$changed_packages" | xargs dirname | sed 's|/src$||' | sort -u)
+          if [ -z "$changed_packages" ]; then
+            echo "No changes found in packages, skipping update"
+            exit 0
+          else
+            updated_packages=""
+            pnpm i -w semver
+            for pkg in $changed_packages
+            do
+              cd $pkg && current_version=$(pnpm pkg get version | sed 's/"//g') && new_version=$($node -pe "require('semver').inc('$current_version', 'patch')") && cd - > /dev/null
+              echo -e "Bumping version for $pkg from $current_version to $new_version"
+              cd $pkg && pnpm pkg set version=$new_version && cd - > /dev/null
+              updated_packages="$updated_packages\n- $pkg: $new_version"
+            done
+            pnpm uninstall -w semver
+            echo -e "Package updates:$updated_packages"
+            echo "::set-output name=updated_packages::$updated_packages"
+          fi
+        id: update-versions
 
       - name: Build packages
         run: pnpm build
 
-      - name: Commit changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -am "Bump package versions"
-          git push
-
       - name: Publish packages
+        if: steps.update-versions.outputs.updated_packages != '' && github.event_name == 'push'
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm publish -r --access public
+
+      - name: Push changes to version branch
+        if: steps.update-versions.outputs.updated_packages != '' && github.event_name == 'push'
+        run: |
+          git checkout version
+          git merge main
+          git push origin version
+
+      - name: Create pull request
+        if: steps.update-versions.outputs.updated_packages != '' && github.event_name == 'push'
+        uses: peter-evans/create-pull-request@v3.12.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "(chore): updated package versions"
+          title: "(chore): Update package versions"
+          body: |
+            The following packages have been updated:
+            ${{ steps.update-versions.outputs.updated_packages }}
+          branch: main
+          base: version

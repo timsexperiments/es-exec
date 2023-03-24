@@ -1,8 +1,8 @@
 {
   "name": "@es-exec/esbuild-plugin-eslint",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "An esbuild plugin to run a script after building a package.",
-  "author": "tim117",
+  "author": "timsexperiments",
   "license": "MIT",
   "keywords": [
     "esbuild",
