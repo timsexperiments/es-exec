@@ -22,14 +22,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-       
+
       - name: Update versions
         run: |
           node=$(which node)
           mv $node $node.exe
           node=$(echo $node.exe)
           git fetch origin --prune
-          changed_packages=$(git diff --name-only origin/version...origin/main --diff-filter=ACM | grep -E "(packages|plugins|utils)/" | sort -u)
+          changed_packages=$(git diff --name-only origin/version...HEAD --diff-filter=ACM | grep -E "(packages|plugins|utils)/" | sort -u)
           if [ -z "$changed_packages" ]; then
             echo "No changes found in packages, skipping update"
             exit 0
