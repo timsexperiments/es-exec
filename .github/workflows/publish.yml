@@ -1,5 +1,6 @@
 name: Publish to NPM
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -20,7 +21,26 @@ jobs:
 
       - name: Update versions
         run: |
-          changed_packages=$(git diff version HEAD --name-only --diff-filter=ACM | grep -E "(packages|plugins|utils)/" | xargs dirname | sort -u)
+          changed_packages=$(git diff --name-only version...HEAD --diff-filter=ACM | grep -E "(packages|plugins|utils)/" | sort -u)
+          if [ -z "$changed_packages" ]; then
+            echo "No changes detected."
+            exit 0
+          fi
+          changed_packages=$(echo "$changed_packages" | xargs dirname | sed 's|/src$||' | sort -u)
+          for pkg in $changed_packages
+          do
+            cd $pkg && current_version=$(pnpm pkg get version | sed 's/"//g') && new_version=$(node.exe -pe "require('semver').inc('$current_version', 'patch')") && pnpm pkg set version=$new_version && cd - > /dev/null
+            echo "Bumping version for $pkg from $current_version to $new_version"
+          done
+
+      - name: Update versions
+        run: |
+          changed_packages=$(git diff --name-only version...HEAD --diff-filter=ACM | grep -E "(packages|plugins|utils)/" | sort -u)
+          if [ -z "$changed_packages" ]; then
+            echo "No changes found in packages, skipping update"
+            exit 0
+          fi
+          changed_packages=$(echo "$changed_packages" | xargs dirname | sed 's|/src$||' | sort -u)
           if [ -z "$changed_packages" ]; then
             echo "No changes found in packages, skipping update"
             exit 0
@@ -28,13 +48,12 @@ jobs:
             updated_packages=""
             for pkg in $changed_packages
             do
-              current_version=$(pnpm pkg get version --package-dir $pkg)
-              new_version=$(node -pe "require('semver').inc('$current_version', 'patch')")
-              echo "Bumping version for $pkg from $current_version to $new_version"
-              pnpm pkg update --package-dir $pkg --version $new_version
+              cd $pkg && current_version=$(pnpm pkg get version | sed 's/"//g') && new_version=$(node.exe -pe "require('semver').inc('$current_version', 'patch')") && cd - > /dev/null
+              echo -e "Bumping version for $pkg from $current_version to $new_version"
+              cd $pkg && pnpm pkg set version=$new_version && cd - > /dev/null
               updated_packages="$updated_packages\n- $pkg: $new_version"
             done
-            echo "Package updates:$updated_packages"
+            echo -e "Package updates:$updated_packages"
             echo "::set-output name=updated_packages::$updated_packages"
           fi
         id: update-versions
