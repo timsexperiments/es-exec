@@ -2,7 +2,7 @@
   "name": "@es-exec/esbuild-plugin-serve",
   "version": "0.0.4",
   "description": "An esbuild plugin to run a script after building a package.",
-  "author": "tim",
+  "author": "timsexperiments",
   "license": "MIT",
   "keywords": [
     "esbuild",
