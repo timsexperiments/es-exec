@@ -14,7 +14,7 @@ This project consists of 5 different projects.
 
 ## @es-exec/cli
 
-A cli for running the es-exec api through the command line. See the [project readme](https://github.com/tim117/es-exec/tree/main/packages/es-cli) for more details.
+A cli for running the es-exec api through the command line. See the [project readme](https://github.com/tim117/es-exec/tree/main/packages/cli) for more details.
 
 ## @es-exec/api
 
