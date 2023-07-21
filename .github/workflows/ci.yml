@@ -8,13 +8,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v2
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm env use --global 16
+          pnpm install --frozen-lockfile
 
       - name: Check code formatting
         run: pnpm format:check
@@ -24,3 +26,6 @@ jobs:
 
       - name: Build packages
         run: pnpm build
+
+      - name: Publish (dry run)
+        run: pnpm publish -r --no-git-checks --force --dry-run

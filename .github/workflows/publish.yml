@@ -1,84 +1,57 @@
-name: Publish to NPM
+name: Publish
 on:
-  push:
-    branches:
-      - main
-
+  workflow_dispatch:
+    inputs:
+      segment:
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - prerelease
+        required: true
+      access:
+        type: choice
+        options:
+          - public
+          - restricted
+        required: true
 jobs:
   increment-versions:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v2
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Update versions
         run: |
-          node=$(which node)
-          mv $node $node.exe
-          node=$(echo $node.exe)
-          git fetch origin --prune
-          changed_packages=$(git diff --name-only origin/version...origin/main --diff-filter=ACM | grep -E "(packages|plugins|utils)/" | sort -u)
-          if [ -z "$changed_packages" ]; then
-            echo "No changes found in packages, skipping update"
-            exit 0
-          fi
-          changed_packages=$(echo "$changed_packages" | xargs dirname | sed 's|/src$||' | sort -u)
-          if [ -z "$changed_packages" ]; then
-            echo "No changes found in packages, skipping update"
-            exit 0
-          else
-            updated_packages=""
-            pnpm i -w semver
-            for pkg in $changed_packages
-            do
-              cd $pkg && current_version=$(pnpm pkg get version | sed 's/"//g') && new_version=$($node -pe "require('semver').inc('$current_version', 'patch')") && cd - > /dev/null
-              echo -e "Bumping version for $pkg from $current_version to $new_version"
-              cd $pkg && pnpm pkg set version=$new_version && cd - > /dev/null
-              updated_packages="$updated_packages\n- $pkg: $new_version"
-            done
-            pnpm uninstall -w semver
-            echo -e "Package updates:$updated_packages"
-            echo "::set-output name=updated_packages::$updated_packages"
-          fi
-        id: update-versions
+          pnpm env use --global 16
+          pnpm install --frozen-lockfile
+
+      - name: Update version
+        id: version
+        run: |
+          old=$(npm version)
+          new=$(npm version ${{ inputs.segment }} --no-git-tag-version)
+          pnpm -r exec "npm version ${new} --no-git-tag-version"
+          git tag versions/${new}
+          echo "old=${old}" >> "$GITHUB_OUTPUT"
+          echo "new=${new}" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "(chore): Update version ${{ steps.version.outputs.old }} -> ${{ steps.version.outputs.new }}"
+          title: "(chore): Update version ${{ steps.version.outputs.old }} -> ${{ steps.version.outputs.new }}"
 
       - name: Build packages
         run: pnpm build
 
       - name: Publish packages
-        if: steps.update-versions.outputs.updated_packages != '' && github.event_name == 'push'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm publish -r --access public
-
-      - name: Push changes to version branch
-        if: steps.update-versions.outputs.updated_packages != '' && github.event_name == 'push'
-        run: |
-          git checkout version
-          git merge main
-          git push origin version
-
-      - name: Create pull request
-        if: steps.update-versions.outputs.updated_packages != '' && github.event_name == 'push'
-        uses: peter-evans/create-pull-request@v3.12.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "(chore): updated package versions"
-          title: "(chore): Update package versions"
-          body: |
-            The following packages have been updated:
-            ${{ steps.update-versions.outputs.updated_packages }}
-          branch: main
-          base: version
+        run: pnpm publish -r --access ${{inputs.access}}
