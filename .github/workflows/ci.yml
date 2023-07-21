@@ -10,11 +10,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Check code formatting
         run: pnpm format:check
@@ -24,3 +27,6 @@ jobs:
 
       - name: Build packages
         run: pnpm build
+
+      - name: Publish (dry run)
+        run: pnpm publish --force --dry-run
