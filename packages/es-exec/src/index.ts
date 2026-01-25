@@ -1,22 +1,9 @@
 import { cleanDir, logger, readConfig } from '@es-exec/utils';
-import { BuildOptions } from 'esbuild';
 import { inspect } from 'util';
 import { build } from './build.js';
+import { ESExecOptions } from './types';
 
-export interface ESExecOptions {
-  buildOptions?: BuildOptions;
-  clean: boolean;
-  env?: NodeJS.ProcessEnv;
-  esbuildConfig?: string;
-  lint: boolean;
-  lintFix: boolean;
-  main?: string;
-  script?: string;
-  singleLint: boolean;
-  useExternal: boolean;
-  verbose: boolean;
-  watch: boolean;
-}
+export * from './types';
 
 /**
  * Starts the es-run process.

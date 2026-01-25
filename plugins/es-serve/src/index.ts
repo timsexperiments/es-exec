@@ -1,23 +1,12 @@
 import { checkShouldContinue } from '@es-exec/plugins-shared';
 import { killProcess, logger } from '@es-exec/utils';
-import { ChildProcess, fork } from 'child_process';
+import { ChildProcess } from 'child_process';
 import { Plugin } from 'esbuild';
 import { resolve } from 'path';
+import { ESServeOptions } from './types';
+import { determineMain, startModule } from './utils';
 
 const PLUGIN_NAME = 'es-serve-plugin';
-
-export interface ESServeOptions {
-  /**
-   * If main is not specified, the esbuild.BuildOptions.outfile should be used
-   * instead.
-   */
-  main?: string;
-  env?: NodeJS.ProcessEnv;
-  execArgv?: string[];
-  runOnError?: boolean;
-  stopOnWarning?: boolean;
-  verbose?: boolean;
-}
 
 export default function ({
   main,
@@ -80,30 +69,4 @@ export default function ({
   };
 }
 
-function determineMain(outfiles: string[]) {
-  const mainFile = /(bundle|index|main|server)\.[cm]?[js]x?$/;
-  if (!outfiles) return undefined;
-  if (outfiles.length === 1) {
-    return outfiles[0];
-  }
-  return outfiles.map((outFile) => outFile).find((file) => mainFile.test(file));
-}
-
-function startModule(
-  main: string,
-  env?: NodeJS.ProcessEnv,
-  execArgv?: string[],
-) {
-  const child = fork(main, { env, execArgv, stdio: 'inherit' })
-    .on('spawn', function () {
-      logger.info(`> ${main}`);
-    })
-    .on('error', function (error) {
-      logger.error(error);
-    })
-    .on('close', function (code) {
-      logger.info(`Completed '${main}' with exit code ${code}`);
-      child.kill('SIGINT');
-    });
-  return child;
-}
+export * from './types';

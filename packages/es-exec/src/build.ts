@@ -1,16 +1,13 @@
 import eslint from '@es-exec/esbuild-plugin-eslint';
 import esserve from '@es-exec/esbuild-plugin-serve';
 import esstart from '@es-exec/esbuild-plugin-start';
-import {
-  DEFAULT_OUT_DIR,
-  getPackageJson,
-  loadModule,
-  logger,
-} from '@es-exec/utils';
+import { loadModule, logger } from '@es-exec/utils';
 import esbuild, { Metafile } from 'esbuild';
 import { resolve } from 'path';
 import { inspect } from 'util';
-import { ESExecOptions } from './index.js';
+import { findExternals } from './build-utils';
+import { DEFAULT_BUILD_OPTIONS } from './constants';
+import { ESExecOptions } from './types';
 
 /**
  * Runs the esbuild client with the eslint and es-start plugins.
@@ -92,21 +89,3 @@ export async function build(options: ESExecOptions): Promise<Metafile> {
 
   return result.metafile;
 }
-
-function findExternals() {
-  const external = [];
-  // When use external is set, add all package.json dependencies to the external
-  // list.
-  const pkg = getPackageJson();
-  external.push(
-    ...Object.keys(pkg?.dependencies ?? {}),
-    ...Object.keys(pkg?.peerDependencies ?? {}),
-  );
-  return external;
-}
-
-const DEFAULT_BUILD_OPTIONS: esbuild.BuildOptions = {
-  outdir: DEFAULT_OUT_DIR,
-  bundle: process.env.NODE_ENV === 'production',
-  metafile: true,
-};

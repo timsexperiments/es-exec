@@ -1,10 +1,5 @@
-import chalk, { Chalk } from 'chalk';
-
-function writeInColor(color: Chalk) {
-  return function (...args: unknown[]) {
-    console.log(color(args));
-  };
-}
+import chalk from 'chalk';
+import { writeInColor } from './write-in-color.js';
 
 /** Logging functions for log type disction. */
 export default {

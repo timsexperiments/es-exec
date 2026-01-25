@@ -3,17 +3,10 @@ import chalk from 'chalk';
 import { Plugin } from 'esbuild';
 import { ESLint } from 'eslint';
 import { join, resolve } from 'path';
-
-interface ESLintPluginOptions {
-  single?: boolean;
-  eslintOptions: ESLint.Options;
-}
+import { LINT_FILTER, NODE_MODULES_REGEX } from './constants';
+import { ESLintPluginOptions } from './types';
 
 const PLUGIN_NAME = 'eslint';
-
-const LINT_FILTER = /\.([jt]sx?|json|cjs|.*rc)?$/;
-
-const NODE_MODULES_REGEX = /node_modules/;
 
 /**
  * Lints the files according to the esling configuration file and outputs the
@@ -109,3 +102,6 @@ export default function (
     },
   };
 }
+
+export * from './constants';
+export * from './types';

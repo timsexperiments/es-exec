@@ -1,12 +1,7 @@
 import { logger } from '@es-exec/utils';
+import { CheckShouldContinueArgs } from './types';
 
-export interface CheckShouldContinueArgs {
-  stopOnWarning: boolean;
-  runOnError: boolean;
-  verbose: boolean;
-  errors: unknown[];
-  warnings: unknown[];
-}
+export * from './types';
 
 export function checkShouldContinue({
   errors,
