@@ -1,11 +1,12 @@
+import { describe, it, expect, vi } from 'vitest';
 import { getPackageJson } from '@es-exec/utils';
 import { findExternals } from '../build-utils';
 
-jest.mock('@es-exec/utils');
+vi.mock('@es-exec/utils');
 
 describe('findExternals', () => {
   it('should return dependencies and peerDependencies', () => {
-    (getPackageJson as jest.Mock).mockReturnValue({
+    (getPackageJson as any).mockReturnValue({
       dependencies: { dep1: '1.0.0' },
       peerDependencies: { peer1: '1.0.0' },
     });

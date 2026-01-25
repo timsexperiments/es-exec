@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import logger from './logger.js';
+import logger from './logger';
 
 /**
  * Loads a modules default export.

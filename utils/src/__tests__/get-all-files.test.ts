@@ -1,7 +1,8 @@
+import { describe, it, expect, vi } from 'vitest';
 import * as fs from 'fs';
 import { getAllFiles } from '../get-all-files';
 
-jest.mock('fs');
+vi.mock('fs');
 
 describe('getAllFiles', () => {
   it('should return file path if path is a file', () => {
