@@ -1,0 +1,3 @@
+# Configuration
+
+Example of configuration.
