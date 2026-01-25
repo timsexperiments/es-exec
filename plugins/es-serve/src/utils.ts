@@ -2,7 +2,7 @@ import { logger } from '@es-exec/utils';
 import { fork } from 'child_process';
 
 export function determineMain(outfiles: string[]) {
-  const mainFile = /(bundle|index|main|server)\.[cm]?[js]x?$/;
+  const mainFile = /(bundle|index|main|server)\.[cm]?[jt]sx?$/;
   if (!outfiles) return undefined;
   if (outfiles.length === 1) {
     return outfiles[0];

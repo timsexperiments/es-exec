@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { resolve } from 'path';
-import { loadModule } from './load-module.js';
+import { loadModule } from './load-module';
 
 const COMMON_CONFIG_EXTENSIONS = /\.(config\.js|json|.*rc|jsonrc)$/;
 

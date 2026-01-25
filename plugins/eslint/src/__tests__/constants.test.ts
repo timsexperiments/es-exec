@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { LINT_FILTER, NODE_MODULES_REGEX } from '../constants';
 
 describe('constants', () => {

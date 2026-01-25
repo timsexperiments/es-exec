@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { esmConfig } from '../../esm-config.js';
 
 describe('esmConfig', () => {

@@ -1,5 +1,5 @@
-export * from './const.js';
-export * from './env.js';
-export * from './file.js';
-export { default as logger } from './logger.js';
-export * from './process.js';
+export * from './const';
+export * from './env';
+export * from './file';
+export { default as logger } from './logger';
+export * from './process';

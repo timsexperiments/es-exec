@@ -1,7 +1,8 @@
+import { describe, it, expect, vi } from 'vitest';
 import dts from 'rollup-plugin-dts';
 import { typesConfig } from '../../types-config.js';
 
-jest.mock('rollup-plugin-dts');
+vi.mock('rollup-plugin-dts');
 
 describe('typesConfig', () => {
   it('should return types configuration', () => {

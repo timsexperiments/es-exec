@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { writeInColor } from './write-in-color.js';
+import { writeInColor } from './write-in-color';
 
 /** Logging functions for log type disction. */
 export default {

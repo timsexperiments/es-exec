@@ -1,1 +1,1 @@
-export * from './kill-process.js';
+export * from './kill-process';

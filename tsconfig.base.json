@@ -10,6 +10,14 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@es-exec/utils": ["utils/src/index.ts"],
+      "@es-exec/api": ["packages/es-exec/src/index.ts"],
+      "@es-exec/plugins-shared": ["plugins/shared/src/index.ts"],
+      "@es-exec/esbuild-plugin-serve": ["plugins/es-serve/src/index.ts"],
+      "@es-exec/esbuild-plugin-start": ["plugins/es-start/src/index.ts"],
+      "@es-exec/esbuild-plugin-eslint": ["plugins/eslint/src/index.ts"]
+    }
   }
 }
