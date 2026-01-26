@@ -7,7 +7,8 @@
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier -uw **/*.[jt]s",
-    "format:check": "prettier -cu **/*.[jt]s"
+    "format:check": "prettier -cu **/*.[jt]s",
+    "ci:publish": "pnpm build && changeset publish"
   },
   "keywords": [
     "esbuild",
@@ -26,6 +27,8 @@
     "url": "git+https://github.com/tim117/es-start.git"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.2",
+    "@changesets/cli": "^2.29.8",
     "@rollup/plugin-typescript": "^8.5.0",
     "@types/eslint": "^8.21.3",
     "@types/node": "^18.15.5",

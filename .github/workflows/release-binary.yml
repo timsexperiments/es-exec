@@ -1,0 +1,47 @@
+name: Release Binary
+
+on:
+  push:
+    tags:
+      - '@es-exec/cli@*'
+
+jobs:
+  build-and-upload:
+    name: Build and Upload Binaries
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Binaries
+        run: |
+          bun build --compile --minify --target=bun-linux-x64 packages/cli/src/main.ts --outfile es-exec-linux-x64
+          bun build --compile --minify --target=bun-darwin-x64 packages/cli/src/main.ts --outfile es-exec-darwin-x64
+          bun build --compile --minify --target=bun-darwin-arm64 packages/cli/src/main.ts --outfile es-exec-darwin-arm64
+          bun build --compile --minify --target=bun-windows-x64 packages/cli/src/main.ts --outfile es-exec-windows-x64.exe
+
+      - name: Upload Binaries to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            es-exec-linux-x64
+            es-exec-darwin-x64
+            es-exec-darwin-arm64
+            es-exec-windows-x64.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
